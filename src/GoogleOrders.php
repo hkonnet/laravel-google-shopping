@@ -132,8 +132,8 @@ class GoogleOrders extends BaseClass
      * @return Google_Service_ShoppingContent_OrdersShipLineItemsRequest
      */
     public function shipLineItemAll($orderId, $lineItem, $shipmentId, $tracingId) {
-        printf("Shipping %d of item %s... ", $lineItem->getQuantityPending(),
-            $lineItem->getId());
+//        printf("Shipping %d of item %s... ", $lineItem->getQuantityPending(),
+//            $lineItem->getId());
         $item = new Google_Service_ShoppingContent_OrderShipmentLineItemShipment();
         $item->setLineItemId($lineItem->getId());
         $item->setQuantity($lineItem->getQuantityPending());
@@ -146,7 +146,7 @@ class GoogleOrders extends BaseClass
         $resp = $this->requestService->orders->shiplineitems($this->merchantId, $orderId, $req);
 //        printf("done (%s).\n", $resp->getExecutionStatus());
 //        print "\n";
-        return $req;
+        return $resp;
     }
 
 }
