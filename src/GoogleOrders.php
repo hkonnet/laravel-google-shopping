@@ -6,6 +6,8 @@ namespace Hkonnet\LaravelGoogleShopping;
 
 class GoogleOrders extends BaseClass
 {
+    private $nonce = 0; // used by newOperationId()
+
     /**
      * Lists the unacknowledged orders for {@code $this->session->merchantId},
      * printing out each in turn.
@@ -42,7 +44,6 @@ class GoogleOrders extends BaseClass
         $resp = $this->requestService->orders->acknowledge($this->merchantId, $orderId, $req);
 
         return $resp;
-
     }
 
     /**
@@ -103,8 +104,7 @@ class GoogleOrders extends BaseClass
      * @return response from Google
      * @see https://developers.google.com/shopping-content/v2/reference/v2/orders/cancellineitem
      */
-    public function cancelLineItem(
-        $orderId, $lineItemId, $quantity, $reason, $reasonText) {
+    public function cancelLineItem($orderId, $lineItemId, $quantity, $reason, $reasonText) {
 //        printf("Cancelling %d of item %s... ", $quantity, $lineItemId);
         $req = new \Google_Service_ShoppingContent_OrdersCancelLineItemRequest();
         $req->setLineItemId($lineItemId);
@@ -148,4 +148,13 @@ class GoogleOrders extends BaseClass
         return $resp;
     }
 
+    /**
+     * Operation IDs (even across operations) must be unique over the lifetime
+     * of an order, so that Google can detect and reject duplicate requests.
+     * Since we're sending requests sequentially and not retrying, we just use
+     * a simple nonce that's incremented each time.
+     */
+    private function newOperationId() {
+        return strval($this->nonce++);
+    }
 }
