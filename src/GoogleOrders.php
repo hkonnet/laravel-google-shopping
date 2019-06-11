@@ -25,7 +25,7 @@ class GoogleOrders extends BaseClass
             }
             $parameters['pageToken'] = $resp->getNextPageToken();
         } while (!empty($parameters['pageToken']));
-        return $order;
+        return $orders;
     }
 
     /**
@@ -36,13 +36,11 @@ class GoogleOrders extends BaseClass
      * @return reponse from Google
      */
     public function acknowledge($orderId) {
-//        printf("Acknowledging order %s... ", $orderId);
         $req = new Google_Service_ShoppingContent_OrdersAcknowledgeRequest();
         $req->setOperationId($this->newOperationId());
         $resp = $this->requestService->orders->acknowledge($this->merchantId, $orderId, $req);
 
         return $resp;
-//        printf("done (%s).\n", $resp->getExecutionStatus());
 
     }
 
