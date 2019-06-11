@@ -36,7 +36,8 @@ class GoogleOrders extends BaseClass
      * @return reponse from Google
      */
     public function acknowledge($orderId) {
-        $req = new Google_Service_ShoppingContent_OrdersAcknowledgeRequest();
+        $req = new \Google_Service_ShoppingContent_OrdersAcknowledgeRequest();
+
         $req->setOperationId($this->newOperationId());
         $resp = $this->requestService->orders->acknowledge($this->merchantId, $orderId, $req);
 
@@ -81,7 +82,7 @@ class GoogleOrders extends BaseClass
      */
     public function updateMerchantOrderId($orderId, $merchantOrderId) {
 //        printf("Updating merchant order ID to %s... ", $merchantOrderId);
-        $req = new Google_Service_ShoppingContent_OrdersUpdateMerchantOrderIdRequest();
+        $req = new \Google_Service_ShoppingContent_OrdersUpdateMerchantOrderIdRequest();
         $req->setOperationId($this->newOperationId());
         $req->setMerchantOrderId($merchantOrderId);
         $resp = $this->requestService->orders->updatemerchantorderid( $this->merchantId, $orderId, $req);
@@ -105,7 +106,7 @@ class GoogleOrders extends BaseClass
     public function cancelLineItem(
         $orderId, $lineItemId, $quantity, $reason, $reasonText) {
 //        printf("Cancelling %d of item %s... ", $quantity, $lineItemId);
-        $req = new Google_Service_ShoppingContent_OrdersCancelLineItemRequest();
+        $req = new \Google_Service_ShoppingContent_OrdersCancelLineItemRequest();
         $req->setLineItemId($lineItemId);
         $req->setQuantity($quantity);
         $req->setReason($reason);
@@ -132,10 +133,10 @@ class GoogleOrders extends BaseClass
     public function shipLineItemAll($orderId, $lineItem, $shipmentId, $tracingId) {
 //        printf("Shipping %d of item %s... ", $lineItem->getQuantityPending(),
 //            $lineItem->getId());
-        $item = new Google_Service_ShoppingContent_OrderShipmentLineItemShipment();
+        $item = new \Google_Service_ShoppingContent_OrderShipmentLineItemShipment();
         $item->setLineItemId($lineItem->getId());
         $item->setQuantity($lineItem->getQuantityPending());
-        $req = new Google_Service_ShoppingContent_OrdersShipLineItemsRequest();
+        $req = new \Google_Service_ShoppingContent_OrdersShipLineItemsRequest();
         $req->setCarrier($lineItem->getShippingDetails()->getMethod()->getCarrier());
         $req->setShipmentId($shipmentId);
         $req->setTrackingId($tracingId);
