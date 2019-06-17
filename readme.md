@@ -32,7 +32,7 @@ Register the service provider by adding it to the providers key in config/app.ph
     Hkonnet\LaravelGoogleShopping\Providers\GoogleShoppingServiceProvider::class, 
 ]
 ```
-**Laravel 5**
+**Laravel 5**   
 ```php
 'providers' => [
     ...

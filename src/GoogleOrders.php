@@ -4,6 +4,8 @@
 namespace Hkonnet\LaravelGoogleShopping;
 
 
+use Google_Service_ShoppingContent_OrdersCustomBatchRequestEntryShipLineItemsShipmentInfo;
+
 class GoogleOrders extends BaseClass
 {
     private $nonce = 0; // used by newOperationId()
@@ -126,25 +128,33 @@ class GoogleOrders extends BaseClass
      * shipping IDs.
      *
      * @param string $orderId the order ID of the order to update
-     * @param Google_Service_ShoppingContent_OrderLineItem $lineItem
-     *        the line item to cancel
-     * @return Google_Service_ShoppingContent_OrdersShipLineItemsRequest
+     * @param string $carrier of the order
+     * @param string $shipmentId merchant shipment id
+     * @param array $lineitems contain all lineitem ids and qty
+     * @return Google_Service_ShoppingContent_OrdersShipLineItemsResponse
      */
-    public function shipLineItemAll($orderId, $lineItem, $shipmentId, $tracingId) {
-//        printf("Shipping %d of item %s... ", $lineItem->getQuantityPending(),
-//            $lineItem->getId());
-        $item = new \Google_Service_ShoppingContent_OrderShipmentLineItemShipment();
-        $item->setLineItemId($lineItem->getId());
-        $item->setQuantity($lineItem->getQuantityPending());
+    public function shipLineItemAll($orderId, $carrier, $shipmentId, $tracingId,$lineitems=[]) {
+
         $req = new \Google_Service_ShoppingContent_OrdersShipLineItemsRequest();
-        $req->setCarrier($lineItem->getShippingDetails()->getMethod()->getCarrier());
-        $req->setShipmentId($shipmentId);
-        $req->setTrackingId($tracingId);
-        $req->setLineItems([$item]);
+        $item = new \Google_Service_ShoppingContent_OrderShipmentLineItemShipment();
+        $items = [];
+        foreach ($lineitems as $lineitem){
+            $item->setLineItemId($lineitem['lineitems_id']);
+            $item->setQuantity($lineitem['qty']);
+            $items[] = $item;
+        }
+        $req->setLineItems($items);
+
+        $shipping_info = new \Google_Service_ShoppingContent_OrdersCustomBatchRequestEntryShipLineItemsShipmentInfo();
+        $shipping_info->setCarrier(strtoupper($carrier));
+        $shipping_info->setShipmentId($shipmentId);
+        $shipping_info->setTrackingId($tracingId);
+
+        $req->setShipmentInfos([$shipping_info]);
+
         $req->operationId = $this->newOperationId();
         $resp = $this->requestService->orders->shiplineitems($this->merchantId, $orderId, $req);
-//        printf("done (%s).\n", $resp->getExecutionStatus());
-//        print "\n";
+
         return $resp;
     }
 
