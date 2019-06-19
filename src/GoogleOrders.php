@@ -11,6 +11,7 @@ class GoogleOrders extends BaseClass
     private $nonce = 0; // used by newOperationId()
 
     public function __construct(){
+        parent::__construct();
         $this->nonce = time();
     }
     /**
