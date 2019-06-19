@@ -10,6 +10,9 @@ class GoogleOrders extends BaseClass
 {
     private $nonce = 0; // used by newOperationId()
 
+    public function __construct(){
+        $this->nonce = time();
+    }
     /**
      * Lists the unacknowledged orders for {@code $this->session->merchantId},
      * printing out each in turn.
