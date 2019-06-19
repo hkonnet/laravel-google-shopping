@@ -14,9 +14,9 @@ class GoogleOrders extends BaseClass
      * Lists the unacknowledged orders for {@code $this->session->merchantId},
      * printing out each in turn.
      */
-    public function listUnacknowledgedOrders() {
+    public function listUnacknowledgedOrders($parameters = []) {
         $orders = [];
-        $parameters = ['acknowledged' => false];
+        $parameters['acknowledged'] = false;
         do {
             $resp = $this->requestService->orders->listOrders($this->merchantId, $parameters);
             if (empty($resp->getResources())) {
