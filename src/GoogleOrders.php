@@ -137,14 +137,14 @@ class GoogleOrders extends BaseClass
      * @param array $lineitems contain all lineitem ids and qty
      * @return Google_Service_ShoppingContent_OrdersShipLineItemsResponse
      */
-    public function shipLineItemAll($orderId, $carrier, $shipmentId, $tracingId,$lineitems=[]) {
+    public function shipLineItemAll($orderId, $carrier, $shipmentId, $tracingId,$products=[]) {
 
         $req = new \Google_Service_ShoppingContent_OrdersShipLineItemsRequest();
         $item = new \Google_Service_ShoppingContent_OrderShipmentLineItemShipment();
         $items = [];
-        foreach ($lineitems as $lineitem){
-            $item->setLineItemId($lineitem['lineitems_id']);
-            $item->setQuantity($lineitem['qty']);
+        foreach ($products as $product){
+            $item->setLineItemId($product['product_id']);
+            $item->setQuantity($product['qty']);
             $items[] = $item;
         }
         $req->setLineItems($items);
