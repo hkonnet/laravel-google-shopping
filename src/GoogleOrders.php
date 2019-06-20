@@ -143,7 +143,7 @@ class GoogleOrders extends BaseClass
         $item = new \Google_Service_ShoppingContent_OrderShipmentLineItemShipment();
         $items = [];
         foreach ($products as $product){
-            $item->setLineItemId($product['product_id']);
+            $item->setProductId($product['product_id']);
             $item->setQuantity($product['qty']);
             $items[] = $item;
         }
