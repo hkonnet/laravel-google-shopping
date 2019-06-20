@@ -35,6 +35,26 @@ class GoogleOrders extends BaseClass
         } while (!empty($parameters['pageToken']));
         return $orders;
     }
+    /**
+     * Lists the all orders for {@code $this->session->merchantId},
+     * printing out each in turn.
+     */
+    public function listOrders($parameters = []) {
+        $orders = [];
+        do {
+            $resp = $this->requestService->orders->listOrders($this->merchantId, $parameters);
+            if (empty($resp->getResources())) {
+                // No Orders
+                return false;
+            }
+            foreach ($resp->getResources() as $order) {
+                $orders[] = $order;
+//                $this->printOrder($order);
+            }
+            $parameters['pageToken'] = $resp->getNextPageToken();
+        } while (!empty($parameters['pageToken']));
+        return $orders;
+    }
 
     /**
      * Acknowledges order {@code $orderId}, which allows us to filter it out
