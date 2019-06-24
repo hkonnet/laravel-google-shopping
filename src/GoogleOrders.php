@@ -144,6 +144,26 @@ class GoogleOrders extends BaseClass
 //        print "\n";
     }
 
+    /**
+     * Cancels a line item from the order {@code $orderId}.
+     *
+     * @param string $orderId the order ID of the order to update
+     * @param string $reason a value from a Google-defined enum (see docs)
+     * @param string $reasonText free-form text explaining the cancellation
+     *
+     * @return response from Google
+     * @see https://developers.google.com/shopping-content/v2/reference/v2/orders/cancellineitem
+     */
+    public function cancelOrder($orderId, $reason, $reasonText){
+        $req = new \Google_Service_ShoppingContent_OrdersCancelRequest();
+        $req->setReason($reason);
+        $req->setReasonText($reasonText);
+        $req->operationId = $this->newOperationId();
+        $resp = $this->requestService->orders->cancel($this->merchantId, $orderId, $req);
+
+        return $resp;
+    }
+
 
     /**
      * Marks a line item from the order {@code $orderId} as having shipped.
