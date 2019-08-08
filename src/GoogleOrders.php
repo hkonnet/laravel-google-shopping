@@ -202,6 +202,37 @@ class GoogleOrders extends BaseClass
     }
 
     /**
+     * Update Shipping info of an order.
+     *
+     * @param string $orderId the order ID of the order to update
+     * @param string $shipmentId merchant shipment id
+     * @param string $carrier of the order
+     * @param string $status of the order
+     * @return Google_Service_ShoppingContent_OrdersShipLineItemsResponse
+     */
+    public function updateShipment($orderId, $shipmentId , $tracingId = "", $carrier = "", $status = "") {
+        $req = new \Google_Service_ShoppingContent_OrdersUpdateShipmentRequest();
+
+        $req->setShipmentId($shipmentId);
+
+        if($carrier){
+            $req->setCarrier(strtoupper($carrier));
+        }
+        if($tracingId){
+            $req->setTrackingId($tracingId);
+        }
+
+        if($status){
+            $req->setStatus($status);
+        }
+
+        $req->operationId = $this->newOperationId();
+        $resp = $this->requestService->orders->updateshipment($this->merchantId, $orderId, $req);
+
+        return $resp;
+    }
+
+    /**
      * Operation IDs (even across operations) must be unique over the lifetime
      * of an order, so that Google can detect and reject duplicate requests.
      * Since we're sending requests sequentially and not retrying, we just use
